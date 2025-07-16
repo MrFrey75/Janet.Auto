@@ -49,7 +49,7 @@ public class AudioChannel : IAudioChannel
     public void SetAudioSource(string filePath)
     {
         var audioFile = new AudioFileReader(filePath);
-        SetAudioSource(audioFile);
+        SetAudioSource(audioFile.ToSampleProvider());
     }
 
     public void SetAudioSource(Stream audioStream)

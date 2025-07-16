@@ -143,21 +143,11 @@ public class AudioService : IAudioService
     {
         var devices = new List<string>();
         
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        // Use WaveOut for device enumeration (works on all platforms)
+        for (int i = 0; i < WaveOut.DeviceCount; i++)
         {
-            for (int i = 0; i < DirectSoundOut.DeviceCount; i++)
-            {
-                var caps = DirectSoundOut.GetCapabilities(i);
-                devices.Add($"{i}: {caps.Description}");
-            }
-        }
-        else
-        {
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                var caps = WaveOut.GetCapabilities(i);
-                devices.Add($"{i}: {caps.ProductName}");
-            }
+            var caps = WaveOut.GetCapabilities(i);
+            devices.Add(i.ToString() + ": " + caps.ProductName);
         }
         
         return devices;

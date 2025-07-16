@@ -4,5 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AudioWorkstation.UI.Controls.SpectrumAnalyzerControl">
-    Welcome to Avalonia!
+    
+    <Border Background="#1A1A1A" 
+            BorderBrush="#404040" 
+            BorderThickness="1" 
+            CornerRadius="4"
+            ClipToBounds="True">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Header -->
+            <TextBlock Grid.Row="0" 
+                       Text="Spectrum Analyzer" 
+                       FontWeight="Bold" 
+                       Foreground="White"
+                       HorizontalAlignment="Center" 
+                       Margin="5"/>
+            
+            <!-- Spectrum Display Area -->
+            <Canvas Grid.Row="1" 
+                    Name="SpectrumCanvas"
+                    Background="Transparent"
+                    ClipToBounds="True"/>
+            
+            <!-- Frequency Scale -->
+            <StackPanel Grid.Row="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Stretch"
+                        Margin="5,2">
+                <TextBlock Text="60Hz" FontSize="8" Foreground="#AAAAAA"/>
+                <TextBlock Text="170Hz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+                <TextBlock Text="310Hz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+                <TextBlock Text="600Hz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+                <TextBlock Text="1kHz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+                <TextBlock Text="3kHz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+                <TextBlock Text="6kHz" FontSize="8" Foreground="#AAAAAA" Margin="20,0,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

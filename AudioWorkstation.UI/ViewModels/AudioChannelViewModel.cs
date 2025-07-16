@@ -14,6 +14,7 @@ public class AudioChannelViewModel : ViewModelBase
     private bool _isSolo = false;
     private bool _isSelected = false;
     private string _displayName = string.Empty;
+    private float _level = 0f; // Add this field
 
     public AudioChannelViewModel(IAudioChannel channel)
     {
@@ -25,9 +26,9 @@ public class AudioChannelViewModel : ViewModelBase
         EqualizerSettings = new EqualizerSettings();
         
         // Commands
-        SelectChannelCommand = ReactiveCommand.Create(() => IsSelected = true);
-        MuteCommand = ReactiveCommand.Create(() => IsMuted = !IsMuted);
-        SoloCommand = ReactiveCommand.Create(() => IsSolo = !IsSolo);
+        SelectChannelCommand = ReactiveCommand.Create(() => { IsSelected = true; });
+        MuteCommand = ReactiveCommand.Create(() => { IsMuted = !IsMuted; });
+        SoloCommand = ReactiveCommand.Create(() => { IsSolo = !IsSolo; });
     }
 
     public IAudioChannel Channel => _channel;
@@ -81,9 +82,22 @@ public class AudioChannelViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isSelected, value);
     }
 
+    // Add the missing Level property
+    public float Level
+    {
+        get => _level;
+        set => this.RaiseAndSetIfChanged(ref _level, Math.Max(0f, Math.Min(1f, value)));
+    }
+
     public EqualizerSettings EqualizerSettings { get; set; }
 
     public ReactiveCommand<Unit, Unit> SelectChannelCommand { get; }
     public ReactiveCommand<Unit, Unit> MuteCommand { get; }
     public ReactiveCommand<Unit, Unit> SoloCommand { get; }
+
+    // Method to update the level from audio processing
+    public void UpdateLevel(float newLevel)
+    {
+        Level = newLevel;
+    }
 }
