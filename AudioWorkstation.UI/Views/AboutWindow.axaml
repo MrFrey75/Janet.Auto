@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AudioWorkstation.UI.Views.AboutWindow"
+        Title="About Audio Workstation"
+        Width="400" Height="300"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#1E1E1E">
+    
+    <StackPanel Margin="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <!-- App Icon/Logo placeholder -->
+        <Border Width="80" Height="80" 
+                Background="#0078D4" 
+                CornerRadius="8"
+                Margin="0,0,0,20"
+                HorizontalAlignment="Center">
+            <TextBlock Text="🎵" 
+                       FontSize="40" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Foreground="White"/>
+        </Border>
+        
+        <!-- App Name -->
+        <TextBlock Text="Audio Workstation Pro" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Foreground="White"
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,10"/>
+        
+        <!-- Version -->
+        <TextBlock Text="Version 1.0.0" 
+                   FontSize="14" 
+                   Foreground="LightGray"
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,20"/>
+        
+        <!-- Description -->
+        <TextBlock Text="Professional audio mixing and streaming application" 
+                   FontSize="12" 
+                   Foreground="LightGray"
+                   HorizontalAlignment="Center" 
+                   TextAlignment="Center"
+                   Margin="0,0,0,10"/>
+        
+        <!-- Technology -->
+        <TextBlock Text="Built with Avalonia UI and NAudio" 
+                   FontSize="12" 
+                   Foreground="LightGray"
+                   HorizontalAlignment="Center" 
+                   TextAlignment="Center"
+                   Margin="0,0,0,20"/>
+        
+        <!-- Copyright -->
+        <TextBlock Text="Copyright © 2025 Audio Workstation" 
+                   FontSize="10" 
+                   Foreground="Gray"
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,20"/>
+        
+        <!-- OK Button -->
+        <Button Content="OK" 
+                Width="100" 
+                Height="35" 
+                HorizontalAlignment="Center"
+                Background="#0078D4"
+                Foreground="White"
+                Click="OkButton_Click"/>
+    </StackPanel>
+</Window>

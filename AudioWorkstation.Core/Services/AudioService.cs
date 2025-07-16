@@ -41,15 +41,8 @@ public class AudioService : IAudioService
     {
         try
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                _waveOut = new DirectSoundOut();
-            }
-            else
-            {
-                _waveOut = new WaveOutEvent();
-            }
-            
+            // Use WaveOutEvent for all platforms - it's more reliable
+            _waveOut = new WaveOutEvent();
             _waveOut.Init(_mixer);
         }
         catch (Exception ex)
@@ -127,29 +120,48 @@ public class AudioService : IAudioService
         _waveOut?.Stop();
         _waveOut?.Dispose();
         
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            _waveOut = new DirectSoundOut(deviceIndex);
-        }
-        else
-        {
-            _waveOut = new WaveOutEvent { DeviceNumber = deviceIndex };
-        }
-        
+        // Use WaveOutEvent for device switching - more reliable than DirectSoundOut
+        _waveOut = new WaveOutEvent { DeviceNumber = deviceIndex };
         _waveOut.Init(_mixer);
     }
 
     public List<string> GetAvailableOutputDevices()
     {
         var devices = new List<string>();
-        
-        // Use WaveOut for device enumeration (works on all platforms)
-        for (int i = 0; i < WaveOut.DeviceCount; i++)
+    
+        try
         {
-            var caps = WaveOut.GetCapabilities(i);
-            devices.Add(i.ToString() + ": " + caps.ProductName);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Use DirectSoundOut for Windows - correct API
+                var directSoundDevices = DirectSoundOut.Devices;
+                int index = 0;
+                foreach (var device in directSoundDevices)
+                {
+                    devices.Add(index.ToString() + ": " + device.Description);
+                    index++;
+                }
+            }
+            else
+            {
+                // For non-Windows platforms, use MMDevice API or fallback
+                devices.Add("0: Default Audio Device");
+            }
         }
-        
+        catch (Exception ex)
+        {
+            // Ultimate fallback - add default device
+            devices.Clear();
+            devices.Add("0: Default Audio Device");
+            Console.WriteLine("Warning: Could not enumerate audio devices: " + ex.Message);
+        }
+    
+        // Ensure we always have at least one device
+        if (devices.Count == 0)
+        {
+            devices.Add("0: Default Audio Device");
+        }
+    
         return devices;
     }
 
