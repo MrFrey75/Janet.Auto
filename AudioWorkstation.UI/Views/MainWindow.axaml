@@ -1,0 +1,207 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AudioWorkstation.UI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
+        x:Class="AudioWorkstation.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Audio Workstation Pro"
+        Width="1400" Height="900"
+        MinWidth="1200" MinHeight="700"
+        Background="#1E1E1E">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="#2D2D2D" Foreground="White">
+            <MenuItem Header="File">
+                <MenuItem Header="New Project" InputGesture="Ctrl+N" />
+                <MenuItem Header="Open Project" InputGesture="Ctrl+O" />
+                <MenuItem Header="Save Project" InputGesture="Ctrl+S" />
+                <Separator />
+                <MenuItem Header="Import Audio File" />
+                <MenuItem Header="Export Mix" />
+                <Separator />
+                <MenuItem Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Preferences" />
+                <MenuItem Header="Audio Settings" />
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Show Mixer" IsCheckable="True" IsChecked="True" />
+                <MenuItem Header="Show Effects" IsCheckable="True" IsChecked="True" />
+                <MenuItem Header="Show Spectrum Analyzer" IsCheckable="True" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Status Bar -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" 
+                   Background="#141414" Height="25">
+            <TextBlock Text="{Binding StatusMessage}" 
+                      Foreground="LightGray" 
+                      VerticalAlignment="Center" 
+                      Margin="10,0" />
+            <TextBlock Text="CPU: 12%" 
+                      Foreground="LightGray" 
+                      VerticalAlignment="Center" 
+                      Margin="20,0" />
+            <TextBlock Text="RAM: 256MB" 
+                      Foreground="LightGray" 
+                      VerticalAlignment="Center" 
+                      Margin="20,0" />
+        </StackPanel>
+
+        <!-- Main Content -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Toolbar -->
+                <RowDefinition Height="*" />    <!-- Content -->
+                <RowDefinition Height="200" />  <!-- Mixer -->
+            </Grid.RowDefinitions>
+
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" 
+                       Background="#282828" Height="50" 
+                       Margin="0,0,0,5">
+                
+                <!-- Transport Controls -->
+                <Button Content="▶ Play All" Width="80" Height="35" 
+                       Margin="10,7" Background="#0078D4" 
+                       Foreground="White" Command="{Binding PlayAllCommand}" />
+                <Button Content="⏹ Stop All" Width="80" Height="35" 
+                       Margin="5,7" Background="#C42B1C" 
+                       Foreground="White" Command="{Binding StopAllCommand}" />
+                
+                <Separator Width="2" Height="30" Margin="10" 
+                          Background="Gray" />
+                
+                <!-- Master Controls -->
+                <TextBlock Text="Master:" Foreground="White" 
+                          VerticalAlignment="Center" Margin="10,0,5,0" />
+                <Slider Minimum="0" Maximum="100" Value="{Binding MasterVolume}" 
+                       Width="100" VerticalAlignment="Center" 
+                       Margin="0,0,10,0" />
+                <TextBlock Text="{Binding MasterVolumeText}" 
+                          Foreground="White" VerticalAlignment="Center" 
+                          Width="35" Margin="0,0,10,0" />
+                <ToggleButton Content="MUTE" Width="50" Height="25" 
+                             VerticalAlignment="Center" Margin="0,0,10,0"
+                             IsChecked="{Binding IsMasterMuted}" />
+                
+                <!-- Audio Device -->
+                <TextBlock Text="Device:" Foreground="White" 
+                          VerticalAlignment="Center" Margin="10,0,5,0" />
+                <ComboBox ItemsSource="{Binding AudioDevices}" 
+                         SelectedItem="{Binding SelectedAudioDevice}"
+                         Width="200" VerticalAlignment="Center" 
+                         Margin="0,0,10,0" />
+                
+                <!-- Level Meter -->
+                <ProgressBar Value="{Binding MasterLevel}" 
+                            Width="100" Height="20" 
+                            VerticalAlignment="Center" Margin="10,0">
+                    <ProgressBar.Foreground>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="Green" Offset="0.0" />
+                            <GradientStop Color="Yellow" Offset="0.7" />
+                            <GradientStop Color="Red" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </ProgressBar.Foreground>
+                </ProgressBar>
+            </StackPanel>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Source Controls -->
+                <TabControl Grid.Column="0" Margin="5">
+                    <TabItem Header="MP3 Player">
+                        <ContentControl Content="{Binding Mp3PlayerViewModel}" />
+                    </TabItem>
+                    <TabItem Header="YouTube Stream">
+                        <ContentControl Content="{Binding YouTubeStreamViewModel}" />
+                    </TabItem>
+                    <TabItem Header="Live Input">
+                        <StackPanel Margin="20" HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center">
+                            <TextBlock Text="Live Audio Input" FontSize="16" 
+                                      FontWeight="Bold" Foreground="White" 
+                                      HorizontalAlignment="Center" Margin="0,0,0,10" />
+                            <TextBlock Text="Coming Soon..." 
+                                      Foreground="LightGray" 
+                                      HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+
+                <!-- Effects Panel -->
+                <StackPanel Grid.Column="1" Margin="5" 
+                           Background="#232323">
+                    <TextBlock Text="Effects &amp; EQ" FontSize="16" 
+                              FontWeight="Bold" Foreground="White" 
+                              Margin="10" HorizontalAlignment="Center" />
+                    
+                    <TextBlock Text="Master Equalizer" FontSize="14" 
+                              FontWeight="Bold" Foreground="LightBlue" 
+                              Margin="10,10,10,5" />
+                    <ContentControl Content="{Binding MasterEqualizerViewModel}" 
+                                   Margin="5" Height="200" />
+                    
+                    <TextBlock Text="Selected Channel EQ" FontSize="14" 
+                              FontWeight="Bold" Foreground="LightGreen" 
+                              Margin="10,20,10,5" />
+                    <ContentControl Content="{Binding ChannelEqualizerViewModel}" 
+                                   Margin="5" Height="200" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Mixer Section -->
+            <Border Grid.Row="2" Background="#191919" 
+                   BorderBrush="#3C3C3C" BorderThickness="0,1,0,0" 
+                   Margin="0,5,0,0">
+                <StackPanel>
+                    <!-- Mixer Header -->
+                    <StackPanel Orientation="Horizontal" 
+                               Background="#141414" Height="30">
+                        <TextBlock Text="Channel Mixer" FontSize="14" 
+                                  FontWeight="Bold" Foreground="White" 
+                                  VerticalAlignment="Center" Margin="10,0" />
+                        <Button Content="+ Add Channel" Height="25" 
+                               Margin="0,2,10,2" 
+                               HorizontalAlignment="Right"
+                               Command="{Binding AddChannelCommand}" />
+                    </StackPanel>
+
+                    <!-- Channel Strips -->
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                                 VerticalScrollBarVisibility="Disabled" 
+                                 Height="165">
+                        <ItemsControl ItemsSource="{Binding ChannelViewModels}" 
+                                     Margin="5">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl Content="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

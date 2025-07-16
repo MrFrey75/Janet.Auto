@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AudioWorkstation.UI.ViewModels"
+             xmlns:controls="using:AudioWorkstation.UI.Controls"
+             x:Class="AudioWorkstation.UI.Controls.ChannelStripControl"
+             x:DataType="vm:AudioChannelViewModel">
+
+    <Border Classes="channel-strip" Background="#282828" 
+            BorderBrush="#3C3C3C" BorderThickness="1" 
+            CornerRadius="4" Margin="2" 
+            Width="80" Height="160">
+        
+        <StackPanel Margin="5">
+            <!-- Channel Name -->
+            <TextBlock Text="{Binding DisplayName}" 
+                      FontSize="10" Foreground="White" 
+                      HorizontalAlignment="Center"
+                      TextWrapping="Wrap" Height="25"
+                      ToolTip.Tip="{Binding DisplayName}"/>
+            
+            <!-- EQ Button -->
+            <Button Content="EQ" Width="30" Height="20" 
+                   FontSize="8" Margin="0,2"
+                   Command="{Binding SelectChannelCommand}"
+                   ToolTip.Tip="Open channel equalizer"/>
+            
+            <!-- Controls Row -->
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,2">
+                <!-- Mute Button -->
+                <ToggleButton Content="M" Width="20" Height="15" 
+                             FontSize="8" Margin="1,0"
+                             IsChecked="{Binding IsMuted}"
+                             ToolTip.Tip="Mute channel"/>
+                
+                <!-- Solo Button -->
+                <ToggleButton Content="S" Width="20" Height="15" 
+                             FontSize="8" Margin="1,0"
+                             IsChecked="{Binding IsSolo}"
+                             ToolTip.Tip="Solo channel"/>
+            </StackPanel>
+            
+            <!-- Level Meter -->
+            <controls:LevelMeterControl Width="15" Height="60" 
+                                       Level="{Binding Level}"
+                                       IsVertical="True"
+                                       Margin="0,2"/>
+            
+            <!-- Volume Slider -->
+            <Slider Orientation="Vertical" Height="40" 
+                   Minimum="0" Maximum="1" 
+                   Value="{Binding Volume}"
+                   Margin="0,2"
+                   ToolTip.Tip="{Binding VolumeDb}"/>
+            
+            <!-- Volume Label -->
+            <TextBlock Text="{Binding VolumePercentage, StringFormat='{}{0:F0}%'}" 
+                      FontSize="8" Foreground="LightGray" 
+                      HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AudioWorkstation.UI.Controls.TransportControl">
+
+    <StackPanel Orientation="Horizontal" 
+               HorizontalAlignment="Center" 
+               Background="#282828" 
+               Height="60" 
+               Margin="10">
+        
+        <!-- Rewind Button -->
+        <Button Classes="transport" Content="⏮" 
+               Width="50" Height="40" 
+               Margin="5" FontSize="16"
+               ToolTip.Tip="Rewind"/>
+        
+        <!-- Play Button -->
+        <Button Classes="transport play" Content="▶" 
+               Width="60" Height="50" 
+               Margin="5" FontSize="20"
+               Name="PlayButton"
+               ToolTip.Tip="Play"/>
+        
+        <!-- Pause Button -->
+        <Button Classes="transport" Content="⏸" 
+               Width="50" Height="40" 
+               Margin="5" FontSize="16"
+               Name="PauseButton"
+               ToolTip.Tip="Pause"/>
+        
+        <!-- Stop Button -->
+        <Button Classes="transport stop" Content="⏹" 
+               Width="50" Height="40" 
+               Margin="5" FontSize="16"
+               Name="StopButton"
+               ToolTip.Tip="Stop"/>
+        
+        <!-- Fast Forward Button -->
+        <Button Classes="transport" Content="⏭" 
+               Width="50" Height="40" 
+               Margin="5" FontSize="16"
+               ToolTip.Tip="Fast Forward"/>
+        
+        <!-- Record Button -->
+        <Button Classes="transport" Content="⏺" 
+               Width="50" Height="40" 
+               Margin="5" FontSize="16"
+               Foreground="Red"
+               Name="RecordButton"
+               ToolTip.Tip="Record"/>
+        
+        <!-- Separator -->
+        <Rectangle Width="2" Height="30" 
+                  Fill="Gray" Margin="10,0"/>
+        
+        <!-- Loop Button -->
+        <ToggleButton Classes="transport" Content="🔁" 
+                     Width="40" Height="30" 
+                     Margin="5" FontSize="14"
+                     Name="LoopButton"
+                     ToolTip.Tip="Loop"/>
+        
+        <!-- Metronome Button -->
+        <ToggleButton Classes="transport" Content="🎵" 
+                     Width="40" Height="30" 
+                     Margin="5" FontSize="14"
+                     Name="MetronomeButton"
+                     ToolTip.Tip="Metronome"/>
+    </StackPanel>
+</UserControl>

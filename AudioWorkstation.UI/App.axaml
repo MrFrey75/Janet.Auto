@@ -1,0 +1,15 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:AudioWorkstation.UI"
+             x:Class="AudioWorkstation.UI.App"
+             RequestedThemeVariant="Dark">
+             
+    <Application.DataTemplates>
+        <ui:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="/Styles/AudioWorkstationStyles.axaml" />
+    </Application.Styles>
+</Application>

@@ -1,0 +1,247 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dark Theme Base -->
+    <Style Selector="Window">
+        <Setter Property="Background" Value="#1E1E1E"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!-- Button Styles -->
+    <Style Selector="Button">
+        <Setter Property="Background" Value="#404040"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="#4A4A4A"/>
+        <Setter Property="BorderBrush" Value="#777"/>
+    </Style>
+
+    <Style Selector="Button:pressed">
+        <Setter Property="Background" Value="#363636"/>
+    </Style>
+
+    <!-- Transport Button Styles -->
+    <Style Selector="Button.transport">
+        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+    </Style>
+
+    <Style Selector="Button.play">
+        <Setter Property="Background" Value="#0078D4"/>
+    </Style>
+
+    <Style Selector="Button.play:pointerover">
+        <Setter Property="Background" Value="#106EBE"/>
+    </Style>
+
+    <Style Selector="Button.stop">
+        <Setter Property="Background" Value="#C42B1C"/>
+    </Style>
+
+    <Style Selector="Button.stop:pointerover">
+        <Setter Property="Background" Value="#A23119"/>
+    </Style>
+
+    <!-- ToggleButton Styles -->
+    <Style Selector="ToggleButton">
+        <Setter Property="Background" Value="#404040"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <Style Selector="ToggleButton:checked">
+        <Setter Property="Background" Value="#0078D4"/>
+        <Setter Property="BorderBrush" Value="#005A9E"/>
+    </Style>
+
+    <Style Selector="ToggleButton:pointerover">
+        <Setter Property="Background" Value="#4A4A4A"/>
+    </Style>
+
+    <Style Selector="ToggleButton:checked:pointerover">
+        <Setter Property="Background" Value="#106EBE"/>
+    </Style>
+
+    <!-- Slider Styles -->
+    <Style Selector="Slider">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="Foreground" Value="#0078D4"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Track#PART_Track">
+        <Setter Property="Background" Value="#444"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Thumb#PART_Thumb">
+        <Setter Property="Background" Value="#0078D4"/>
+        <Setter Property="BorderBrush" Value="#005A9E"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Thumb#PART_Thumb:pointerover">
+        <Setter Property="Background" Value="#106EBE"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Thumb#PART_Thumb:pressed">
+        <Setter Property="Background" Value="#005A9E"/>
+    </Style>
+
+    <!-- Vertical Slider (for channel strips) -->
+    <Style Selector="Slider.vertical">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="100"/>
+    </Style>
+
+    <!-- TextBox Styles -->
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="#0078D4"/>
+    </Style>
+
+    <!-- ComboBox Styles -->
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <!-- ListBox Styles -->
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="#232323"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style Selector="ListBoxItem">
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected">
+        <Setter Property="Background" Value="#0078D4"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:pointerover">
+        <Setter Property="Background" Value="#404040"/>
+    </Style>
+
+    <!-- TabControl Styles -->
+    <Style Selector="TabControl">
+        <Setter Property="Background" Value="#2D2D2D"/>
+    </Style>
+
+    <Style Selector="TabItem">
+        <Setter Property="Background" Value="#404040"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Margin" Value="0,0,2,0"/>
+    </Style>
+
+    <Style Selector="TabItem:selected">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="BorderBrush" Value="#0078D4"/>
+        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+    </Style>
+
+    <Style Selector="TabItem:pointerover">
+        <Setter Property="Background" Value="#4A4A4A"/>
+    </Style>
+
+    <!-- Menu Styles -->
+    <Style Selector="Menu">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="MenuItem">
+        <Setter Property="Padding" Value="12,6"/>
+    </Style>
+
+    <Style Selector="MenuItem:selected">
+        <Setter Property="Background" Value="#0078D4"/>
+    </Style>
+
+    <!-- Channel Strip Styles -->
+    <Style Selector="Border.channel-strip">
+        <Setter Property="Background" Value="#282828"/>
+        <Setter Property="BorderBrush" Value="#3C3C3C"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="160"/>
+    </Style>
+
+    <Style Selector="Border.channel-strip:pointerover">
+        <Setter Property="BorderBrush" Value="#0078D4"/>
+    </Style>
+
+    <Style Selector="Border.channel-strip.selected">
+        <Setter Property="BorderBrush" Value="#0078D4"/>
+        <Setter Property="Background" Value="#323232"/>
+    </Style>
+
+    <!-- Equalizer Styles -->
+    <Style Selector="Border.equalizer">
+        <Setter Property="Background" Value="#2D2D2D"/>
+        <Setter Property="BorderBrush" Value="#555"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+
+    <!-- Progress Bar Styles -->
+    <Style Selector="ProgressBar">
+        <Setter Property="Background" Value="#333"/>
+        <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="2"/>
+    </Style>
+
+    <!-- Separator Styles -->
+    <Style Selector="Separator">
+        <Setter Property="Background" Value="#666"/>
+        <Setter Property="Margin" Value="5,0"/>
+    </Style>
+
+    <!-- ScrollViewer Styles -->
+    <Style Selector="ScrollViewer">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style Selector="ScrollBar">
+        <Setter Property="Background" Value="#2D2D2D"/>
+    </Style>
+
+    <!-- Image Styles -->
+    <Style Selector="Image.thumbnail">
+        <Setter Property="Stretch" Value="UniformToFill"/>
+        <Setter Property="Width" Value="160"/>
+        <Setter Property="Height" Value="90"/>
+    </Style>
+</Styles>

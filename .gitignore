@@ -1,0 +1,102 @@
+## Visual Studio & .NET
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.env
+*.userprefs
+mono_crash.*
+
+# Build results
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]*/
+bld/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+**/[Bb]in/*
+**/[Oo]bj/*
+
+.vs/
+Generated\ Files/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+*.received.*
+BenchmarkDotNet.Artifacts/
+artifacts/
+*.log
+*.tmp
+*.pdb
+*.scc
+*.cache
+*.dbmdl
+
+# Rider / ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+/_ReSharper.Caches/
+riderModule.iml
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Node / Web
+node_modules/
+bower_components/
+
+# Azure
+*.azurePubxml
+*.pubxml
+*.publishproj
+csx/
+ecf/
+rcf/
+
+# ClickOnce / Publish
+publish/
+*.appx
+*.appxbundle
+*.appxupload
+*.publishsettings
+*.publish.xml
+PublishScripts/
+
+# Others
+*.aps
+*.opt
+*.vbw
+*.vbp
+*.plg
+*.vsix
+*.cab
+*.msi
+*.msm
+*.msp
+.history/
+.vshistory/
+*.binlog
+MSBuild_Logs/
+.aws-sam
+
