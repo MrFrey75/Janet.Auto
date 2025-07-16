@@ -19,7 +19,7 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        _audioService = new AudioService.AudioService();
+        _audioService = new AudioService();
         
         // Initialize collections
         ChannelViewModels = new ObservableCollection<AudioChannelViewModel>();

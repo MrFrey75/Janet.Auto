@@ -30,25 +30,25 @@ public class DialogService : IDialogService
 
     public async Task<string[]?> ShowOpenFileDialogAsync(string title, FilePickerFileType[] fileTypes)
     {
-        var dialog = new OpenFileDialog
+        var files = await _parentWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = title,
-            AllowMultiple = false
-        };
+            AllowMultiple = false,
+            FileTypeFilter = fileTypes
+        });
 
-        var result = await dialog.ShowAsync(_parentWindow);
-        return result?.Select(f => f.Path.LocalPath).ToArray();
+        return files?.Select(f => f.Path.LocalPath).ToArray();
     }
 
     public async Task<string?> ShowSaveFileDialogAsync(string title, FilePickerFileType[] fileTypes)
     {
-        var dialog = new SaveFileDialog
+        var file = await _parentWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Title = title
-        };
+            Title = title,
+            FileTypeChoices = fileTypes
+        });
 
-        var result = await dialog.ShowAsync(_parentWindow);
-        return result?.Path.LocalPath;
+        return file?.Path.LocalPath;
     }
 
     public async Task<bool> ShowConfirmationDialogAsync(string title, string message)

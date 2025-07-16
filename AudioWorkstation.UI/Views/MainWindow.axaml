@@ -34,9 +34,9 @@
                 <MenuItem Header="Audio Settings" />
             </MenuItem>
             <MenuItem Header="View">
-                <MenuItem Header="Show Mixer" IsCheckable="True" IsChecked="True" />
-                <MenuItem Header="Show Effects" IsCheckable="True" IsChecked="True" />
-                <MenuItem Header="Show Spectrum Analyzer" IsCheckable="True" />
+                <MenuItem Header="Show Mixer" ToggleType="CheckBox" IsChecked="True" />
+                <MenuItem Header="Show Effects" ToggleType="CheckBox" IsChecked="True" />
+                <MenuItem Header="Show Spectrum Analyzer" ToggleType="CheckBox" />
             </MenuItem>
         </Menu>
 
