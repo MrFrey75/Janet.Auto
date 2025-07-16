@@ -3,6 +3,8 @@ using NAudio.Wave.SampleProviders;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using AudioWorkstation.Core.Models;
+using AudioWorkstation.Core.Effects;
+using AudioWorkstation.Core.SampleProviders;
 
 namespace AudioWorkstation.Core.Services;
 

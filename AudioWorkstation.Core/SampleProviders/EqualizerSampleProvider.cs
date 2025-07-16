@@ -1,5 +1,6 @@
 using NAudio.Wave;
 using AudioWorkstation.Core.Models;
+using NAudio.Dsp; // Add this for BiQuadFilter
 
 namespace AudioWorkstation.Core.SampleProviders;
 

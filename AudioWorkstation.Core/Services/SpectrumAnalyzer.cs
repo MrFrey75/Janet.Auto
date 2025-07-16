@@ -1,19 +1,19 @@
 using NAudio.Dsp;
-using System.Numerics;
+// Remove: using System.Numerics; // This causes the ambiguous reference
 
 namespace AudioWorkstation.Core.Services;
 
 public class SpectrumAnalyzer
 {
     private readonly int _fftLength;
-    private readonly Complex[] _fftBuffer;
+    private readonly NAudio.Dsp.Complex[] _fftBuffer; // Explicitly use NAudio.Dsp.Complex
     private readonly float[] _window;
     private readonly float[] _spectrumData;
 
     public SpectrumAnalyzer(int fftLength = 1024)
     {
         _fftLength = fftLength;
-        _fftBuffer = new Complex[fftLength];
+        _fftBuffer = new NAudio.Dsp.Complex[fftLength];
         _window = new float[fftLength];
         _spectrumData = new float[fftLength / 2];
         
@@ -32,7 +32,11 @@ public class SpectrumAnalyzer
         // Apply window and convert to complex
         for (int i = 0; i < _fftLength; i++)
         {
-            _fftBuffer[i] = new Complex(audioData[i] * _window[i], 0);
+            _fftBuffer[i] = new NAudio.Dsp.Complex
+            {
+                X = audioData[i] * _window[i], // Real part
+                Y = 0 // Imaginary part
+            };
         }
 
         // Perform FFT
@@ -41,8 +45,8 @@ public class SpectrumAnalyzer
         // Calculate magnitude spectrum
         for (int i = 0; i < _fftLength / 2; i++)
         {
-            var magnitude = Math.Sqrt(_fftBuffer[i].Real * _fftBuffer[i].Real + 
-                                      _fftBuffer[i].Imaginary * _fftBuffer[i].Imaginary);
+            var magnitude = Math.Sqrt(_fftBuffer[i].X * _fftBuffer[i].X + 
+                                      _fftBuffer[i].Y * _fftBuffer[i].Y);
             _spectrumData[i] = (float)(20 * Math.Log10(magnitude + 1e-10)); // Convert to dB
         }
 
@@ -58,4 +62,4 @@ public class SpectrumAnalyzer
         }
         return bins;
     }
-} 
+}
