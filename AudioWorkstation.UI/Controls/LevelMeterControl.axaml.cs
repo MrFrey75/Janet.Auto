@@ -4,10 +4,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.Controls.Shapes;
 
 namespace AudioWorkstation.UI.Controls;
 
-public partial class LevelMeterControl : Control
+public partial class LevelMeterControl : UserControl
 {
     public static readonly StyledProperty<float> LevelProperty =
         AvaloniaProperty.Register<LevelMeterControl, float>(nameof(Level));
@@ -18,22 +19,12 @@ public partial class LevelMeterControl : Control
     public static readonly StyledProperty<bool> IsVerticalProperty =
         AvaloniaProperty.Register<LevelMeterControl, bool>(nameof(IsVertical), true);
 
-    // Add missing styled properties that the XAML is trying to set
-    public static readonly StyledProperty<IBrush?> BackgroundProperty =
-        Border.BackgroundProperty.AddOwner<LevelMeterControl>();
-
-    public static readonly StyledProperty<IBrush?> BorderBrushProperty =
-        Border.BorderBrushProperty.AddOwner<LevelMeterControl>();
-
-    public static readonly StyledProperty<Thickness> BorderThicknessProperty =
-        Border.BorderThicknessProperty.AddOwner<LevelMeterControl>();
-
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
-        Border.CornerRadiusProperty.AddOwner<LevelMeterControl>();
-
     public static readonly StyledProperty<bool> ShowScaleProperty =
         AvaloniaProperty.Register<LevelMeterControl, bool>(nameof(ShowScale), true);
 
+    private Canvas? _meterCanvas;
+    private Rectangle? _levelBar;
+    private Rectangle? _peakHoldBar;
     private float _peakHoldLevel;
     private DateTime _peakHoldTime;
     private readonly DispatcherTimer _peakTimer;
@@ -56,30 +47,6 @@ public partial class LevelMeterControl : Control
         set => SetValue(IsVerticalProperty, value);
     }
 
-    public IBrush? Background
-    {
-        get => GetValue(BackgroundProperty);
-        set => SetValue(BackgroundProperty, value);
-    }
-
-    public IBrush? BorderBrush
-    {
-        get => GetValue(BorderBrushProperty);
-        set => SetValue(BorderBrushProperty, value);
-    }
-
-    public Thickness BorderThickness
-    {
-        get => GetValue(BorderThicknessProperty);
-        set => SetValue(BorderThicknessProperty, value);
-    }
-
-    public CornerRadius CornerRadius
-    {
-        get => GetValue(CornerRadiusProperty);
-        set => SetValue(CornerRadiusProperty, value);
-    }
-
     public bool ShowScale
     {
         get => GetValue(ShowScaleProperty);
@@ -88,18 +55,113 @@ public partial class LevelMeterControl : Control
 
     static LevelMeterControl()
     {
-        AffectsRender<LevelMeterControl>(LevelProperty, PeakLevelProperty, IsVerticalProperty, 
-            BackgroundProperty, BorderBrushProperty, BorderThicknessProperty, CornerRadiusProperty);
+        LevelProperty.Changed.AddClassHandler<LevelMeterControl>((x, e) => x.UpdateLevel());
+        PeakLevelProperty.Changed.AddClassHandler<LevelMeterControl>((x, e) => x.UpdatePeakLevel());
     }
 
     public LevelMeterControl()
     {
+        InitializeComponent();
+        
         _peakTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(50)
         };
         _peakTimer.Tick += PeakTimer_Tick;
         _peakTimer.Start();
+        
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        _meterCanvas = this.FindControl<Canvas>("PART_MeterCanvas");
+        InitializeMeterElements();
+    }
+
+    private void InitializeMeterElements()
+    {
+        if (_meterCanvas == null) return;
+
+        _meterCanvas.Children.Clear();
+
+        // Create background gradient
+        var background = new Rectangle
+        {
+            Width = _meterCanvas.Bounds.Width,
+            Height = _meterCanvas.Bounds.Height,
+            Fill = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                GradientStops =
+                {
+                    new GradientStop(Color.FromRgb(0, 17, 0), 0.0),
+                    new GradientStop(Color.FromRgb(0, 34, 0), 0.7),
+                    new GradientStop(Color.FromRgb(51, 34, 0), 0.85),
+                    new GradientStop(Color.FromRgb(51, 0, 0), 1.0)
+                }
+            }
+        };
+
+        // Create level bar
+        _levelBar = new Rectangle
+        {
+            Width = _meterCanvas.Bounds.Width,
+            Height = 0,
+            Fill = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                GradientStops =
+                {
+                    new GradientStop(Colors.Green, 0.0),
+                    new GradientStop(Colors.Yellow, 0.7),
+                    new GradientStop(Colors.Orange, 0.85),
+                    new GradientStop(Colors.Red, 1.0)
+                }
+            }
+        };
+
+        // Create peak hold bar
+        _peakHoldBar = new Rectangle
+        {
+            Width = _meterCanvas.Bounds.Width,
+            Height = 2,
+            Fill = Brushes.White,
+            IsVisible = false
+        };
+
+        Canvas.SetBottom(_levelBar, 0);
+        Canvas.SetTop(_peakHoldBar, 0);
+
+        _meterCanvas.Children.Add(background);
+        _meterCanvas.Children.Add(_levelBar);
+        _meterCanvas.Children.Add(_peakHoldBar);
+    }
+
+    private void UpdateLevel()
+    {
+        if (_levelBar == null || _meterCanvas == null) return;
+
+        var canvasHeight = _meterCanvas.Bounds.Height;
+        if (canvasHeight <= 0) return;
+
+        var levelHeight = canvasHeight * Level;
+        _levelBar.Height = levelHeight;
+        Canvas.SetBottom(_levelBar, 0);
+    }
+
+    private void UpdatePeakLevel()
+    {
+        if (_peakHoldBar == null || _meterCanvas == null) return;
+
+        var canvasHeight = _meterCanvas.Bounds.Height;
+        if (canvasHeight <= 0) return;
+
+        var peakY = canvasHeight * (1 - PeakLevel);
+        Canvas.SetTop(_peakHoldBar, peakY);
+        _peakHoldBar.IsVisible = PeakLevel > 0;
     }
 
     private void PeakTimer_Tick(object? sender, EventArgs e)
@@ -115,121 +177,20 @@ public partial class LevelMeterControl : Control
             _peakHoldLevel *= 0.95f; // Decay peak hold
             PeakLevel = _peakHoldLevel;
         }
-
-        InvalidateVisual();
     }
 
-    public override void Render(DrawingContext context)
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
-        var bounds = Bounds;
-        if (bounds.Width <= 0 || bounds.Height <= 0)
-            return;
-
-        // Draw border
-        if (BorderThickness.Top > 0 && BorderBrush != null)
+        base.OnSizeChanged(e);
+        
+        if (_meterCanvas != null && e.NewSize.Width > 0 && e.NewSize.Height > 0)
         {
-            var borderRect = new Rect(bounds.Size);
-            var pen = new Pen(BorderBrush, BorderThickness.Top);
-            context.DrawRectangle(null, pen, borderRect, CornerRadius.TopLeft, CornerRadius.TopRight, 
-                CornerRadius.BottomRight, CornerRadius.BottomLeft);
-        }
-
-        // Background
-        if (Background != null)
-        {
-            var backgroundRect = new Rect(bounds.Size);
-            context.FillRectangle(Background, backgroundRect);
-        }
-
-        var contentBounds = bounds.Deflate(BorderThickness);
-
-        // Level bar
-        var levelBrush = CreateLevelBrush();
-        Rect levelRect;
-
-        if (IsVertical)
-        {
-            var levelHeight = contentBounds.Height * Level;
-            levelRect = new Rect(contentBounds.X, contentBounds.Bottom - levelHeight, contentBounds.Width, levelHeight);
-        }
-        else
-        {
-            var levelWidth = contentBounds.Width * Level;
-            levelRect = new Rect(contentBounds.X, contentBounds.Y, levelWidth, contentBounds.Height);
-        }
-
-        context.FillRectangle(levelBrush, levelRect);
-
-        // Peak hold line
-        var peakBrush = Brushes.White;
-        if (IsVertical)
-        {
-            var peakY = contentBounds.Bottom - (contentBounds.Height * PeakLevel);
-            context.FillRectangle(peakBrush, new Rect(contentBounds.X, peakY - 1, contentBounds.Width, 2));
-        }
-        else
-        {
-            var peakX = contentBounds.X + (contentBounds.Width * PeakLevel);
-            context.FillRectangle(peakBrush, new Rect(peakX - 1, contentBounds.Y, 2, contentBounds.Height));
-        }
-
-        // Scale markings
-        if (ShowScale)
-        {
-            DrawScale(context, contentBounds);
+            Dispatcher.UIThread.Post(() => 
+            {
+                InitializeMeterElements();
+                UpdateLevel();
+                UpdatePeakLevel();
+            }, DispatcherPriority.Background);
         }
     }
-
-    private IBrush CreateLevelBrush()
-    {
-        return new LinearGradientBrush
-        {
-            StartPoint = IsVertical ? new RelativePoint(0, 1, RelativeUnit.Relative) : new RelativePoint(0, 0, RelativeUnit.Relative),
-            EndPoint = IsVertical ? new RelativePoint(0, 0, RelativeUnit.Relative) : new RelativePoint(1, 0, RelativeUnit.Relative),
-            GradientStops =
-            {
-                new GradientStop(Colors.Green, 0.0),
-                new GradientStop(Colors.Yellow, 0.75),
-                new GradientStop(Colors.Orange, 0.9),
-                new GradientStop(Colors.Red, 1.0)
-            }
-        };
-    }
-
-    private void DrawScale(DrawingContext context, Rect bounds)
-    {
-        if (!ShowScale || bounds.Width < 30) return; // Don't draw scale if too small
-
-        var textBrush = Brushes.LightGray;
-        var lineBrush = Brushes.Gray;
-        var typeface = new Typeface("Arial");
-        var fontSize = 8;
-
-        // Draw scale marks at -60, -40, -20, -10, -6, -3, 0 dB
-        var scalePoints = new[] { 0.0f, 0.1f, 0.25f, 0.5f, 0.75f, 0.9f, 1.0f };
-        var scaleLabels = new[] { "-60", "-40", "-20", "-10", "-6", "-3", "0" };
-
-        for (int i = 0; i < scalePoints.Length; i++)
-        {
-            if (IsVertical)
-            {
-                var y = bounds.Bottom - (bounds.Height * scalePoints[i]);
-                var lineStart = new Point(bounds.Right - 5, y);
-                var lineEnd = new Point(bounds.Right, y);
-                context.DrawLine(new Pen(lineBrush, 1), lineStart, lineEnd);
-                
-                var text = new FormattedText(scaleLabels[i], CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, textBrush);
-                context.DrawText(text, new Point(bounds.Right - 25, y - text.Height / 2));
-            }
-            else
-            {
-                var x = bounds.X + (bounds.Width * scalePoints[i]);
-                var lineStart = new Point(x, bounds.Bottom - 5);
-                var lineEnd = new Point(x, bounds.Bottom);
-                context.DrawLine(new Pen(lineBrush, 1), lineStart, lineEnd);
-                
-                var text = new FormattedText(scaleLabels[i], CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, textBrush);
-                context.DrawText(text, new Point(x - text.Width / 2, bounds.Bottom - 15));
-            }
-        }
-    }
+}

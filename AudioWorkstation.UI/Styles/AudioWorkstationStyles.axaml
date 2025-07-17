@@ -79,9 +79,18 @@
         <Setter Property="Foreground" Value="#0078D4"/>
     </Style>
 
-    <Style Selector="Slider /template/ Track">
+    <!-- Fixed Slider Track Styles -->
+    <Style Selector="Slider /template/ Track#PART_Track">
+        <Setter Property="Minimum" Value="{Binding $parent[Slider].Minimum}"/>
+        <Setter Property="Maximum" Value="{Binding $parent[Slider].Maximum}"/>
+        <Setter Property="Value" Value="{Binding $parent[Slider].Value}"/>
+    </Style>
+
+    <Style Selector="Slider /template/ Border#TrackBackground">
         <Setter Property="Background" Value="#444"/>
         <Setter Property="BorderBrush" Value="#666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="2"/>
     </Style>
 
     <Style Selector="Slider /template/ Thumb">
