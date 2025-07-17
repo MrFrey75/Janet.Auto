@@ -7,7 +7,7 @@ using Avalonia.Threading;
 
 namespace AudioWorkstation.UI.Controls;
 
-public class LevelMeterControl : Control
+public partial class LevelMeterControl : Control
 {
     public static readonly StyledProperty<float> LevelProperty =
         AvaloniaProperty.Register<LevelMeterControl, float>(nameof(Level));
@@ -17,6 +17,22 @@ public class LevelMeterControl : Control
 
     public static readonly StyledProperty<bool> IsVerticalProperty =
         AvaloniaProperty.Register<LevelMeterControl, bool>(nameof(IsVertical), true);
+
+    // Add missing styled properties that the XAML is trying to set
+    public static readonly StyledProperty<IBrush?> BackgroundProperty =
+        Border.BackgroundProperty.AddOwner<LevelMeterControl>();
+
+    public static readonly StyledProperty<IBrush?> BorderBrushProperty =
+        Border.BorderBrushProperty.AddOwner<LevelMeterControl>();
+
+    public static readonly StyledProperty<Thickness> BorderThicknessProperty =
+        Border.BorderThicknessProperty.AddOwner<LevelMeterControl>();
+
+    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
+        Border.CornerRadiusProperty.AddOwner<LevelMeterControl>();
+
+    public static readonly StyledProperty<bool> ShowScaleProperty =
+        AvaloniaProperty.Register<LevelMeterControl, bool>(nameof(ShowScale), true);
 
     private float _peakHoldLevel;
     private DateTime _peakHoldTime;
@@ -40,9 +56,40 @@ public class LevelMeterControl : Control
         set => SetValue(IsVerticalProperty, value);
     }
 
+    public IBrush? Background
+    {
+        get => GetValue(BackgroundProperty);
+        set => SetValue(BackgroundProperty, value);
+    }
+
+    public IBrush? BorderBrush
+    {
+        get => GetValue(BorderBrushProperty);
+        set => SetValue(BorderBrushProperty, value);
+    }
+
+    public Thickness BorderThickness
+    {
+        get => GetValue(BorderThicknessProperty);
+        set => SetValue(BorderThicknessProperty, value);
+    }
+
+    public CornerRadius CornerRadius
+    {
+        get => GetValue(CornerRadiusProperty);
+        set => SetValue(CornerRadiusProperty, value);
+    }
+
+    public bool ShowScale
+    {
+        get => GetValue(ShowScaleProperty);
+        set => SetValue(ShowScaleProperty, value);
+    }
+
     static LevelMeterControl()
     {
-        AffectsRender<LevelMeterControl>(LevelProperty, PeakLevelProperty, IsVerticalProperty);
+        AffectsRender<LevelMeterControl>(LevelProperty, PeakLevelProperty, IsVerticalProperty, 
+            BackgroundProperty, BorderBrushProperty, BorderThicknessProperty, CornerRadiusProperty);
     }
 
     public LevelMeterControl()
@@ -55,7 +102,7 @@ public class LevelMeterControl : Control
         _peakTimer.Start();
     }
 
-    private void PeakTimer_Tick(object sender, EventArgs e)
+    private void PeakTimer_Tick(object? sender, EventArgs e)
     {
         if (Level > _peakHoldLevel)
         {
@@ -74,14 +121,27 @@ public class LevelMeterControl : Control
 
     public override void Render(DrawingContext context)
     {
-        base.Render(context);
-
         var bounds = Bounds;
         if (bounds.Width <= 0 || bounds.Height <= 0)
             return;
 
+        // Draw border
+        if (BorderThickness.Top > 0 && BorderBrush != null)
+        {
+            var borderRect = new Rect(bounds.Size);
+            var pen = new Pen(BorderBrush, BorderThickness.Top);
+            context.DrawRectangle(null, pen, borderRect, CornerRadius.TopLeft, CornerRadius.TopRight, 
+                CornerRadius.BottomRight, CornerRadius.BottomLeft);
+        }
+
         // Background
-        context.FillRectangle(Brushes.Black, bounds);
+        if (Background != null)
+        {
+            var backgroundRect = new Rect(bounds.Size);
+            context.FillRectangle(Background, backgroundRect);
+        }
+
+        var contentBounds = bounds.Deflate(BorderThickness);
 
         // Level bar
         var levelBrush = CreateLevelBrush();
@@ -89,13 +149,13 @@ public class LevelMeterControl : Control
 
         if (IsVertical)
         {
-            var levelHeight = bounds.Height * Level;
-            levelRect = new Rect(0, bounds.Height - levelHeight, bounds.Width, levelHeight);
+            var levelHeight = contentBounds.Height * Level;
+            levelRect = new Rect(contentBounds.X, contentBounds.Bottom - levelHeight, contentBounds.Width, levelHeight);
         }
         else
         {
-            var levelWidth = bounds.Width * Level;
-            levelRect = new Rect(0, 0, levelWidth, bounds.Height);
+            var levelWidth = contentBounds.Width * Level;
+            levelRect = new Rect(contentBounds.X, contentBounds.Y, levelWidth, contentBounds.Height);
         }
 
         context.FillRectangle(levelBrush, levelRect);
@@ -104,17 +164,20 @@ public class LevelMeterControl : Control
         var peakBrush = Brushes.White;
         if (IsVertical)
         {
-            var peakY = bounds.Height - (bounds.Height * PeakLevel);
-            context.FillRectangle(peakBrush, new Rect(0, peakY - 1, bounds.Width, 2));
+            var peakY = contentBounds.Bottom - (contentBounds.Height * PeakLevel);
+            context.FillRectangle(peakBrush, new Rect(contentBounds.X, peakY - 1, contentBounds.Width, 2));
         }
         else
         {
-            var peakX = bounds.Width * PeakLevel;
-            context.FillRectangle(peakBrush, new Rect(peakX - 1, 0, 2, bounds.Height));
+            var peakX = contentBounds.X + (contentBounds.Width * PeakLevel);
+            context.FillRectangle(peakBrush, new Rect(peakX - 1, contentBounds.Y, 2, contentBounds.Height));
         }
 
         // Scale markings
-        DrawScale(context, bounds);
+        if (ShowScale)
+        {
+            DrawScale(context, contentBounds);
+        }
     }
 
     private IBrush CreateLevelBrush()
@@ -135,6 +198,8 @@ public class LevelMeterControl : Control
 
     private void DrawScale(DrawingContext context, Rect bounds)
     {
+        if (!ShowScale || bounds.Width < 30) return; // Don't draw scale if too small
+
         var textBrush = Brushes.LightGray;
         var lineBrush = Brushes.Gray;
         var typeface = new Typeface("Arial");
@@ -148,20 +213,23 @@ public class LevelMeterControl : Control
         {
             if (IsVertical)
             {
-                var y = bounds.Height - (bounds.Height * scalePoints[i]);
-                context.DrawLine(new Pen(lineBrush, 1), new Point(bounds.Width - 5, y), new Point(bounds.Width, y));
+                var y = bounds.Bottom - (bounds.Height * scalePoints[i]);
+                var lineStart = new Point(bounds.Right - 5, y);
+                var lineEnd = new Point(bounds.Right, y);
+                context.DrawLine(new Pen(lineBrush, 1), lineStart, lineEnd);
                 
                 var text = new FormattedText(scaleLabels[i], CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, textBrush);
-                context.DrawText(text, new Point(bounds.Width - 20, y - text.Height / 2));
+                context.DrawText(text, new Point(bounds.Right - 25, y - text.Height / 2));
             }
             else
             {
-                var x = bounds.Width * scalePoints[i];
-                context.DrawLine(new Pen(lineBrush, 1), new Point(x, bounds.Height - 5), new Point(x, bounds.Height));
+                var x = bounds.X + (bounds.Width * scalePoints[i]);
+                var lineStart = new Point(x, bounds.Bottom - 5);
+                var lineEnd = new Point(x, bounds.Bottom);
+                context.DrawLine(new Pen(lineBrush, 1), lineStart, lineEnd);
                 
                 var text = new FormattedText(scaleLabels[i], CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, textBrush);
-                context.DrawText(text, new Point(x - text.Width / 2, bounds.Height - 15));
+                context.DrawText(text, new Point(x - text.Width / 2, bounds.Bottom - 15));
             }
         }
     }
-}

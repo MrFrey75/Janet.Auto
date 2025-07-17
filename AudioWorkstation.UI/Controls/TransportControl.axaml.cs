@@ -34,10 +34,17 @@ public partial class TransportControl : UserControl
         stopButton!.Click += (s, e) => StopClicked?.Invoke(this, EventArgs.Empty);
         recordButton!.Click += (s, e) => RecordClicked?.Invoke(this, EventArgs.Empty);
         
-        loopButton!.Checked += (s, e) => LoopChanged?.Invoke(this, true);
-        loopButton.Unchecked += (s, e) => LoopChanged?.Invoke(this, false);
+        // Use IsCheckedChanged instead of Checked/Unchecked
+        loopButton!.IsCheckedChanged += (s, e) => 
+        {
+            if (loopButton.IsChecked.HasValue)
+                LoopChanged?.Invoke(this, loopButton.IsChecked.Value);
+        };
         
-        metronomeButton!.Checked += (s, e) => MetronomeChanged?.Invoke(this, true);
-        metronomeButton.Unchecked += (s, e) => MetronomeChanged?.Invoke(this, false);
+        metronomeButton!.IsCheckedChanged += (s, e) => 
+        {
+            if (metronomeButton.IsChecked.HasValue)
+                MetronomeChanged?.Invoke(this, metronomeButton.IsChecked.Value);
+        };
     }
 }

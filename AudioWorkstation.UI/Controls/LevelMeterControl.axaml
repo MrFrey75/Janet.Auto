@@ -1,402 +1,88 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:AudioWorkstation.UI.Controls">
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AudioWorkstation.UI.Controls.LevelMeterControl"
+             Background="#1A1A1A"
+             BorderBrush="#404040"
+             BorderThickness="1"
+             Width="20"
+             Height="100">
 
-    <!-- LevelMeterControl Default Style -->
-    <Style Selector="controls|LevelMeterControl">
-        <Setter Property="Background" Value="#1A1A1A"/>
-        <Setter Property="BorderBrush" Value="#404040"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="2"/>
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="100"/>
-        <Setter Property="Margin" Value="2"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="ClipToBounds" Value="True"/>
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        ClipToBounds="True">
-                    
-                    <!-- Meter Content Grid -->
-                    <Grid Name="PART_MeterGrid">
-                        <Grid.RowDefinitions>
-                            <!-- Main meter area -->
-                            <RowDefinition Height="*"/>
-                            <!-- Scale area (if horizontal) -->
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <!-- Main meter area -->
-                            <ColumnDefinition Width="*"/>
-                            <!-- Scale area (if vertical) -->
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+    <Border Background="{Binding $parent[UserControl].Background}"
+            BorderBrush="{Binding $parent[UserControl].BorderBrush}"
+            BorderThickness="{Binding $parent[UserControl].BorderThickness}"
+            CornerRadius="2"
+            ClipToBounds="True">
+        
+        <Grid Name="PART_MeterGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-                        <!-- Meter Background with Gradient Segments -->
-                        <Border Name="PART_MeterBackground" 
-                               Grid.Row="0" Grid.Column="0"
-                               ClipToBounds="True">
-                            <Border.Background>
-                                <LinearGradientBrush>
-                                    <!-- Gradient stops for meter segments -->
-                                    <GradientStop Color="#0A0A0A" Offset="0.0"/>
-                                    <GradientStop Color="#1A1A1A" Offset="0.2"/>
-                                    <GradientStop Color="#2A2A2A" Offset="0.4"/>
-                                    <GradientStop Color="#1A1A1A" Offset="0.6"/>
-                                    <GradientStop Color="#0A0A0A" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                        </Border>
+            <!-- Meter Background with Gradient -->
+            <Border Name="PART_MeterBackground" 
+                   Grid.Row="0" Grid.Column="0"
+                   ClipToBounds="True">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                        <GradientStop Color="#001100" Offset="0.0"/>
+                        <GradientStop Color="#002200" Offset="0.7"/>
+                        <GradientStop Color="#332200" Offset="0.85"/>
+                        <GradientStop Color="#330000" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
 
-                        <!-- Level Bar Overlay -->
-                        <Rectangle Name="PART_LevelBar"
-                                  Grid.Row="0" Grid.Column="0"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Bottom"
-                                  ClipToBounds="True">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush>
-                                    <GradientStop Color="#00FF00" Offset="0.0"/>   <!-- Green -->
-                                    <GradientStop Color="#80FF00" Offset="0.7"/>   <!-- Yellow-Green -->
-                                    <GradientStop Color="#FFFF00" Offset="0.85"/>  <!-- Yellow -->
-                                    <GradientStop Color="#FF8000" Offset="0.95"/>  <!-- Orange -->
-                                    <GradientStop Color="#FF0000" Offset="1.0"/>   <!-- Red -->
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
+            <!-- Level Bar Overlay -->
+            <Rectangle Name="PART_LevelBar"
+                      Grid.Row="0" Grid.Column="0"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Bottom"
+                      Height="0"
+                      ClipToBounds="True">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                        <GradientStop Color="#00FF00" Offset="0.0"/>
+                        <GradientStop Color="#80FF00" Offset="0.7"/>
+                        <GradientStop Color="#FFFF00" Offset="0.85"/>
+                        <GradientStop Color="#FF8000" Offset="0.95"/>
+                        <GradientStop Color="#FF0000" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
 
-                        <!-- Peak Hold Indicator -->
-                        <Rectangle Name="PART_PeakHold"
-                                  Grid.Row="0" Grid.Column="0"
-                                  Height="2" Width="2"
-                                  Fill="White"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Top"
-                                  IsVisible="False"/>
+            <!-- Peak Hold Indicator -->
+            <Rectangle Name="PART_PeakHold"
+                      Grid.Row="0" Grid.Column="0"
+                      Height="2"
+                      Fill="White"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      IsVisible="True"
+                      Opacity="0.8"/>
 
-                        <!-- Clip Indicator -->
-                        <Ellipse Name="PART_ClipIndicator"
-                                Grid.Row="0" Grid.Column="0"
-                                Width="8" Height="8"
-                                Fill="Red"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
-                                Margin="2"
-                                IsVisible="False"
-                                Opacity="0">
-                            <Ellipse.Styles>
-                                <Style Selector="Ellipse.clipping">
-                                    <Style.Animations>
-                                        <Animation Duration="0:0:0.5" IterationCount="INFINITE">
-                                            <KeyFrame Cue="0%">
-                                                <Setter Property="Opacity" Value="0"/>
-                                            </KeyFrame>
-                                            <KeyFrame Cue="50%">
-                                                <Setter Property="Opacity" Value="1"/>
-                                            </KeyFrame>
-                                            <KeyFrame Cue="100%">
-                                                <Setter Property="Opacity" Value="0"/>
-                                            </KeyFrame>
-                                        </Animation>
-                                    </Style.Animations>
-                                </Style>
-                            </Ellipse.Styles>
-                        </Ellipse>
+            <!-- Clip Indicator -->
+            <Ellipse Name="PART_ClipIndicator"
+                    Grid.Row="0" Grid.Column="0"
+                    Width="8" Height="8"
+                    Fill="Red"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="2"
+                    IsVisible="False"
+                    Opacity="0"/>
 
-                        <!-- Scale Markings Container -->
-                        <StackPanel Name="PART_ScaleContainer"
-                                   Grid.Row="0" Grid.Column="1"
-                                   Orientation="Vertical"
-                                   VerticalAlignment="Stretch"
-                                   IsVisible="True"
-                                   Margin="2,0,0,0">
-                            <!-- Scale marks will be generated in code-behind -->
-                        </StackPanel>
-
-                        <!-- RMS/Peak Text Display -->
-                        <StackPanel Name="PART_TextDisplay"
-                                   Grid.Row="1" Grid.Column="0"
-                                   Grid.ColumnSpan="2"
-                                   Orientation="Horizontal"
-                                   HorizontalAlignment="Center"
-                                   Margin="2"
-                                   IsVisible="False">
-                            <TextBlock Name="PART_RMSText"
-                                      FontSize="8"
-                                      Foreground="LightGray"
-                                      Text="RMS"
-                                      Margin="0,0,4,0"/>
-                            <TextBlock Name="PART_PeakText"
-                                      FontSize="8" 
-                                      Foreground="White"
-                                      Text="PEAK"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- Vertical Meter Style -->
-    <Style Selector="controls|LevelMeterControl.vertical">
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="100"/>
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        ClipToBounds="True">
-                    
-                    <Grid Name="PART_MeterGrid">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Vertical Meter Background -->
-                        <Border Name="PART_MeterBackground" 
-                               Grid.Column="0"
-                               ClipToBounds="True">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                    <GradientStop Color="#001100" Offset="0.0"/>
-                                    <GradientStop Color="#002200" Offset="0.7"/>
-                                    <GradientStop Color="#332200" Offset="0.85"/>
-                                    <GradientStop Color="#330000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                        </Border>
-
-                        <!-- Vertical Level Bar -->
-                        <Rectangle Name="PART_LevelBar"
-                                  Grid.Column="0"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Bottom"
-                                  ClipToBounds="True">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                    <GradientStop Color="#00FF00" Offset="0.0"/>
-                                    <GradientStop Color="#80FF00" Offset="0.7"/>
-                                    <GradientStop Color="#FFFF00" Offset="0.85"/>
-                                    <GradientStop Color="#FF8000" Offset="0.95"/>
-                                    <GradientStop Color="#FF0000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-
-                        <!-- Vertical Peak Hold Line -->
-                        <Rectangle Name="PART_PeakHold"
-                                  Grid.Column="0"
-                                  Height="2"
-                                  Fill="White"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Top"
-                                  IsVisible="True"
-                                  Opacity="0.8"/>
-
-                        <!-- Vertical Scale -->
-                        <StackPanel Name="PART_ScaleContainer"
-                                   Grid.Column="1"
-                                   Orientation="Vertical"
-                                   VerticalAlignment="Stretch"
-                                   Margin="2,0,0,0">
-                            <!-- Scale marks generated in code -->
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- Horizontal Meter Style -->
-    <Style Selector="controls|LevelMeterControl.horizontal">
-        <Setter Property="Width" Value="100"/>
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        ClipToBounds="True">
-                    
-                    <Grid Name="PART_MeterGrid">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Horizontal Meter Background -->
-                        <Border Name="PART_MeterBackground" 
-                               Grid.Row="0"
-                               ClipToBounds="True">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#001100" Offset="0.0"/>
-                                    <GradientStop Color="#002200" Offset="0.7"/>
-                                    <GradientStop Color="#332200" Offset="0.85"/>
-                                    <GradientStop Color="#330000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                        </Border>
-
-                        <!-- Horizontal Level Bar -->
-                        <Rectangle Name="PART_LevelBar"
-                                  Grid.Row="0"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Stretch"
-                                  ClipToBounds="True">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#00FF00" Offset="0.0"/>
-                                    <GradientStop Color="#80FF00" Offset="0.7"/>
-                                    <GradientStop Color="#FFFF00" Offset="0.85"/>
-                                    <GradientStop Color="#FF8000" Offset="0.95"/>
-                                    <GradientStop Color="#FF0000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-
-                        <!-- Horizontal Peak Hold Line -->
-                        <Rectangle Name="PART_PeakHold"
-                                  Grid.Row="0"
-                                  Width="2"
-                                  Fill="White"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Stretch"
-                                  IsVisible="True"
-                                  Opacity="0.8"/>
-
-                        <!-- Horizontal Scale -->
-                        <StackPanel Name="PART_ScaleContainer"
-                                   Grid.Row="1"
-                                   Orientation="Horizontal"
-                                   HorizontalAlignment="Stretch"
-                                   Margin="0,2,0,0">
-                            <!-- Scale marks generated in code -->
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- Compact Meter Style (no scale) -->
-    <Style Selector="controls|LevelMeterControl.compact">
-        <Setter Property="ShowScale" Value="False"/>
-        <Setter Property="Width" Value="15"/>
-        <Setter Property="Height" Value="80"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="CornerRadius" Value="1"/>
-    </Style>
-
-    <!-- Stereo Meter Style (dual meters) -->
-    <Style Selector="controls|LevelMeterControl.stereo">
-        <Setter Property="Template">
-            <ControlTemplate>
-                <StackPanel Orientation="Horizontal" Spacing="2">
-                    <!-- Left Channel -->
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Width="8" Height="100"
-                            ClipToBounds="True">
-                        <Rectangle Name="PART_LeftChannel"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Bottom">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                    <GradientStop Color="#00FF00" Offset="0.0"/>
-                                    <GradientStop Color="#FFFF00" Offset="0.7"/>
-                                    <GradientStop Color="#FF0000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                    </Border>
-                    
-                    <!-- Right Channel -->
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Width="8" Height="100"
-                            ClipToBounds="True">
-                        <Rectangle Name="PART_RightChannel"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Bottom">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                    <GradientStop Color="#00FF00" Offset="0.0"/>
-                                    <GradientStop Color="#FFFF00" Offset="0.7"/>
-                                    <GradientStop Color="#FF0000" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                    </Border>
-                    
-                    <!-- Scale for stereo meter -->
-                    <StackPanel Name="PART_StereoScale"
-                               Orientation="Vertical"
-                               VerticalAlignment="Stretch"
-                               Margin="2,0,0,0">
-                        <!-- Scale marks -->
-                    </StackPanel>
-                </StackPanel>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- Animated clipping indicator -->
-    <Style Selector="controls|LevelMeterControl /template/ Ellipse#PART_ClipIndicator.clipping">
-        <Style.Animations>
-            <Animation Duration="0:0:0.5" IterationCount="INFINITE">
-                <KeyFrame Cue="0%">
-                    <Setter Property="Opacity" Value="0"/>
-                </KeyFrame>
-                <KeyFrame Cue="50%">
-                    <Setter Property="Opacity" Value="1"/>
-                </KeyFrame>
-                <KeyFrame Cue="100%">
-                    <Setter Property="Opacity" Value="0"/>
-                </KeyFrame>
-            </Animation>
-        </Style.Animations>
-    </Style>
-
-    <!-- Scale text styling -->
-    <Style Selector="controls|LevelMeterControl TextBlock.scale-mark">
-        <Setter Property="FontSize" Value="8"/>
-        <Setter Property="Foreground" Value="#AAAAAA"/>
-        <Setter Property="FontFamily" Value="Consolas, Monaco, 'Courier New', monospace"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="2,0"/>
-    </Style>
-
-    <!-- Peak hold line styling -->
-    <Style Selector="controls|LevelMeterControl /template/ Rectangle#PART_PeakHold">
-        <Setter Property="Fill" Value="White"/>
-        <Setter Property="Opacity" Value="0.9"/>
-        <Style.Animations>
-            <Animation Duration="0:0:2" IterationCount="INFINITE">
-                <KeyFrame Cue="0%">
-                    <Setter Property="Opacity" Value="0.9"/>
-                </KeyFrame>
-                <KeyFrame Cue="50%">
-                    <Setter Property="Opacity" Value="0.6"/>
-                </KeyFrame>
-                <KeyFrame Cue="100%">
-                    <Setter Property="Opacity" Value="0.9"/>
-                </KeyFrame>
-            </Animation>
-        </Style.Animations>
-    </Style>
-</Styles>
+            <!-- Scale Markings Container -->
+            <StackPanel Name="PART_ScaleContainer"
+                       Grid.Row="0" Grid.Column="1"
+                       Orientation="Vertical"
+                       VerticalAlignment="Stretch"
+                       IsVisible="True"
+                       Margin="2,0,0,0"/>
+        </Grid>
+    </Border>
+</UserControl>

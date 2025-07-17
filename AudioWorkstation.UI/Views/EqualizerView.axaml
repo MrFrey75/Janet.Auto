@@ -1,0 +1,131 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AudioWorkstation.UI.ViewModels"
+             x:Class="AudioWorkstation.UI.Views.EqualizerView"
+             x:DataType="vm:EqualizerViewModel">
+
+    <Border Classes="equalizer" Padding="10">
+        <StackPanel>
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBlock Text="{Binding Title}" 
+                          FontWeight="Bold" 
+                          Foreground="White" 
+                          VerticalAlignment="Center"/>
+                <ToggleButton Content="ON" 
+                             IsChecked="{Binding IsEnabled}"
+                             Width="40" Height="25"
+                             Margin="10,0,0,0"
+                             HorizontalAlignment="Right"/>
+            </StackPanel>
+
+            <!-- EQ Bands -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Frequency Labels -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="60Hz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="170Hz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Grid.Row="0" Text="310Hz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Grid.Row="0" Text="600Hz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Grid.Row="0" Text="1kHz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="5" Grid.Row="0" Text="3kHz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="6" Grid.Row="0" Text="6kHz" FontSize="8" 
+                          Foreground="LightGray" HorizontalAlignment="Center"/>
+
+                <!-- EQ Sliders -->
+                <Slider Grid.Column="0" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band60Hz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="1" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band170Hz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="2" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band310Hz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="3" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band600Hz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="4" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band1kHz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="5" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band3kHz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+                <Slider Grid.Column="6" Grid.Row="1" 
+                       Orientation="Vertical" Height="80"
+                       Minimum="-20" Maximum="20" 
+                       Value="{Binding Settings.Band6kHz}"
+                       IsEnabled="{Binding IsEnabled}"/>
+
+                <!-- Value Labels -->
+                <TextBlock Grid.Column="0" Grid.Row="2" 
+                          Text="{Binding Settings.Band60Hz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" 
+                          Text="{Binding Settings.Band170Hz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Grid.Row="2" 
+                          Text="{Binding Settings.Band310Hz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Grid.Row="2" 
+                          Text="{Binding Settings.Band600Hz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Grid.Row="2" 
+                          Text="{Binding Settings.Band1kHz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="5" Grid.Row="2" 
+                          Text="{Binding Settings.Band3kHz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="6" Grid.Row="2" 
+                          Text="{Binding Settings.Band6kHz, StringFormat='{}{0:F1}'}" 
+                          FontSize="8" Foreground="LightGray" 
+                          HorizontalAlignment="Center"/>
+            </Grid>
+
+            <!-- Reset Button -->
+            <Button Content="Reset" 
+                   Width="60" Height="25" 
+                   Margin="0,10,0,0"
+                   Command="{Binding ResetCommand}"
+                   HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Border>
+</UserControl>

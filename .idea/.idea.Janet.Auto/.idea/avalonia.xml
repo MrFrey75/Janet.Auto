@@ -6,8 +6,11 @@
         <entry key="AudioWorkstation.UI/Controls/ChannelStripControl.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
         <entry key="AudioWorkstation.UI/Controls/LevelMeterControl.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
         <entry key="AudioWorkstation.UI/Controls/SpectrumAnalyzerControl.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
+        <entry key="AudioWorkstation.UI/Styles/AudioWorkstationStyles.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
         <entry key="AudioWorkstation.UI/Views/AboutWindow.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
+        <entry key="AudioWorkstation.UI/Views/EqualizerView.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
         <entry key="AudioWorkstation.UI/Views/MainWindow.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
+        <entry key="AudioWorkstation.UI/Views/Mp3PlayerView.axaml" value="AudioWorkstation.UI/AudioWorkstation.UI.csproj" />
       </map>
     </option>
   </component>
